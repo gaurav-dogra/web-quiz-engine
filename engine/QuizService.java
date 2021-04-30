@@ -1,10 +1,13 @@
 package engine;
 
+import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class QuizService {
     private final Map<Long, Quiz> quizzes = new HashMap<>();
 
@@ -12,12 +15,15 @@ public class QuizService {
         long id = quizzes.size() + 1;
         quiz.setId(id);
         quizzes.put(id, quiz);
-        return new ServerResponseQuiz(quizzes.get(id));
+        return ServerResponseQuiz.valueOf(quiz);
     }
 
-    public ServerResponseQuiz get(long id) {
+    public ServerResponseQuiz getQuizById(long id) {
         Quiz quiz = quizzes.get(id);
-        return new ServerResponseQuiz(quiz);
+        if (quiz == null) {
+            return null;
+        }
+        return ServerResponseQuiz.valueOf(quiz);
     }
 }
 
