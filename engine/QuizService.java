@@ -10,12 +10,14 @@ public class QuizService {
 
     public ServerResponseQuiz save(Quiz quiz) {
         long id = quizzes.size() + 1;
+        quiz.setId(id);
         quizzes.put(id, quiz);
         return new ServerResponseQuiz(quizzes.get(id));
     }
 
     public ServerResponseQuiz get(long id) {
-        return new ServerResponseQuiz(quizzes.get(id));
+        Quiz quiz = quizzes.get(id);
+        return new ServerResponseQuiz(quiz);
     }
 }
 
