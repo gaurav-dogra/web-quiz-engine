@@ -1,14 +1,12 @@
-package engine;
+package engine.model;
 
 public class Quiz {
     private String title;
     private String text;
     private String[] options;
+    private int answer;
 
     public Quiz() {
-        this.title = "The Java Logo";
-        this.text = "What is depicted on the Java logo?";
-        this.options = new String[]{"Robot", "Tea leaf", "Cup of coffee", "Bug"};
     }
 
     public String getTitle() {
