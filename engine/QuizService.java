@@ -2,15 +2,20 @@ package engine;
 
 import engine.model.Quiz;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QuizService {
-    private final List<Quiz> quizzes = new ArrayList<>();
+    private final Map<Long, Quiz> quizzes = new HashMap<>();
 
     public ServerResponseQuiz save(Quiz quiz) {
-        quizzes.add(quiz);
-        return new ServerResponseQuiz(quizzes);
+        long id = quizzes.size() + 1;
+        quizzes.put(id, quiz);
+        return new ServerResponseQuiz(quizzes.get(id));
+    }
+
+    public ServerResponseQuiz get(long id) {
+        return new ServerResponseQuiz(quizzes.get(id));
     }
 }
 
