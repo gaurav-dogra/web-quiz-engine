@@ -13,3 +13,4 @@ public class QuizService {
         return new ServerResponseQuiz(quizzes);
     }
 }
+

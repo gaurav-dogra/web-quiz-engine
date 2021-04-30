@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class QuizController {
 
+    private QuizService quizService = new QuizService();
+
     @GetMapping("/api/quiz")
     public Quiz getQuiz() {
         return new Quiz();
@@ -22,7 +24,12 @@ public class QuizController {
 
     @PostMapping("/api/quizzes")
     public ServerResponseQuiz createQuiz(@RequestBody Quiz quiz) {
-        return new QuizService().save(quiz);
+        return quizService.save(quiz);
+    }
+
+    @GetMapping("/api/quizzes/{id}")
+    public ServerResponseQuiz getQuizById(@PathVariable long id) {
+        return quizService.get(id);
     }
 
 }
