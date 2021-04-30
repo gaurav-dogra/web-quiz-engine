@@ -1,5 +1,7 @@
 package engine.model;
 
+import java.util.Arrays;
+
 public class Quiz {
 
     private long id;
@@ -49,5 +51,16 @@ public class Quiz {
 
     public void setOptions(String[] options) {
         this.options = options;
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", options=" + Arrays.toString(options) +
+                ", answer=" + answer +
+                '}';
     }
 }
