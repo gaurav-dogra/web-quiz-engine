@@ -11,9 +11,8 @@ public class ServerResponseQuiz {
     private String[] options;
 
 
-    public ServerResponseQuiz(List<Quiz> quizzes) {
-        Quiz quiz = quizzes.get(quizzes.size() - 1);
-        this.id = quizzes.size();
+    public ServerResponseQuiz(Quiz quiz) {
+        this.id = quiz.getId();
         this.title = quiz.getTitle();
         this.text = quiz.getTitle();
         this.options = quiz.getOptions();
