@@ -8,7 +8,8 @@ import java.util.List;
 public class QuizService {
     private final List<Quiz> quizzes = new ArrayList<>();
 
-    public void save(Quiz quiz) {
+    public ServerResponseQuiz save(Quiz quiz) {
         quizzes.add(quiz);
+        return new ServerResponseQuiz(quizzes);
     }
 }

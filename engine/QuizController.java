@@ -1,5 +1,6 @@
 package engine;
 
+import engine.model.Quiz;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,11 @@ public class QuizController {
         } else {
             return Reply.INCORRECT_ANSWER;
         }
+    }
+
+    @PostMapping("/api/quizzes")
+    public ServerResponseQuiz createQuiz(@RequestBody Quiz quiz) {
+        return new QuizService().save(quiz);
     }
 
 }
