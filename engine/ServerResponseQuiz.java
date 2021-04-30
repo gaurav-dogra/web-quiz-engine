@@ -10,15 +10,16 @@ public class ServerResponseQuiz {
     private String text;
     private String[] options;
 
-
-    public ServerResponseQuiz(Quiz quiz) {
-        this.id = quiz.getId();
-        this.title = quiz.getTitle();
-        this.text = quiz.getTitle();
-        this.options = quiz.getOptions();
+    public ServerResponseQuiz() {
     }
 
-    public ServerResponseQuiz() {
+    public static ServerResponseQuiz valueOf(Quiz quiz) {
+        ServerResponseQuiz serverResponseQuiz = new ServerResponseQuiz();
+        serverResponseQuiz.id = quiz.getId();
+        serverResponseQuiz.title = quiz.getTitle();
+        serverResponseQuiz.text = quiz.getTitle();
+        serverResponseQuiz.options = quiz.getOptions();
+        return serverResponseQuiz;
     }
 
     public long getId() {
