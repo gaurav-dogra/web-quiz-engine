@@ -1,5 +1,6 @@
 package engine;
 
+import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,13 @@ public class QuizController {
     }
 
     @GetMapping("/api/quizzes/{id}")
-    public ServerResponseQuiz getQuizById(@PathVariable long id) {
-        return quizService.get(id);
+    public ServerResponseQuiz getQuizById(@PathVariable long id) throws NotFoundException {
+        ServerResponseQuiz serverResponseQuiz = quizService.getQuizById(id);
+        if (serverResponseQuiz == null) {
+            throw new NotFoundException(id + " Quiz does not exist");
+        } else {
+            return serverResponseQuiz;
+        }
     }
 
 }
