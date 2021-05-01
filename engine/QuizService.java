@@ -4,7 +4,9 @@ import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,6 +26,14 @@ public class QuizService {
             return null;
         }
         return ServerResponseQuiz.valueOf(quiz);
+    }
+
+    public List<ServerResponseQuiz> getAll() {
+        List<ServerResponseQuiz> result = new ArrayList<>();
+        for (Quiz quiz : quizzes.values()) {
+            result.add(ServerResponseQuiz.valueOf(quiz));
+        }
+        return result;
     }
 }
 
