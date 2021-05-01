@@ -36,12 +36,12 @@ public class QuizController {
     }
 
     @PostMapping("/api/quizzes/{id}/solve")
-    public Reply solve(@PathVariable long id, @RequestParam int[] answer) throws NotFoundException {
+    public Reply solve(@PathVariable long id, @RequestBody AnswerParameter answer) throws NotFoundException {
         System.out.println("QuizController.solve");
         System.out.println("id = " + id);
-        System.out.println("answer = " + Arrays.toString(answer));
+        System.out.println("answer = " + Arrays.toString(answer.getAnswer()));
         if (quizService.quizExist(id)) {
-            return quizService.solve(id, answer);
+            return quizService.solve(id, answer.getAnswer());
         } else {
             throw new NotFoundException(id + " Quiz does not exist");
         }
