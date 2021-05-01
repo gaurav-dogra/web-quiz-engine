@@ -31,6 +31,9 @@ public class Quiz {
     }
 
     public int[] getAnswer() {
+        if (answer == null) {
+            return new int[]{};
+        }
         return answer;
     }
 
