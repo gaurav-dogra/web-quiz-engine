@@ -18,7 +18,6 @@ public class QuizService {
     }
 
     public ServerResponseQuiz getQuizById(long id) {
-        System.out.println("QuizService.getQuizById");
         return ServerResponseQuiz.valueOf(quizzes.get(id));
     }
 
@@ -35,18 +34,19 @@ public class QuizService {
         return quiz != null;
     }
 
-    public Reply solve(long id, int[] answer) {
-        System.out.println("QuizService.solve");
+    public Reply solve(long id, int[] parameterAnswer) {
         Quiz quiz = quizzes.get(id);
-        List<Integer> answerDatabaseList = Arrays.stream(quiz.getAnswer())
-                .boxed()
-                .collect(Collectors.toList());
+        int[] databaseAnswer = quiz.getAnswer();
 
-        List<Integer> answerParameter = Arrays.stream(answer)
-                .boxed()
-                .collect(Collectors.toList());
+        Set<Integer> databaseAnswerSet = Arrays.stream(databaseAnswer)
+                    .boxed()
+                    .collect(Collectors.toSet());
 
-        if (answerDatabaseList.equals(answerParameter)) {
+        Set<Integer> parameterAnswerSet = Arrays.stream(parameterAnswer)
+                    .boxed()
+                    .collect(Collectors.toSet());
+
+        if (databaseAnswerSet.equals(parameterAnswerSet)) {
             return Reply.CORRECT_ANSWER;
         } else {
             return Reply.INCORRECT_ANSWER;
