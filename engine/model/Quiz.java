@@ -3,7 +3,6 @@ package engine.model;
 import java.util.Arrays;
 
 public class Quiz {
-
     private long id;
     private String title;
     private String text;
