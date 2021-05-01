@@ -21,10 +21,7 @@ public class QuizService {
 
     public ServerResponseQuiz getQuizById(long id) {
         System.out.println("QuizService.getQuizById");
-        if (quizExist(id)) {
-            return ServerResponseQuiz.valueOf(quizzes.get(id));
-        }
-        return null;
+        return ServerResponseQuiz.valueOf(quizzes.get(id));
     }
 
     public List<ServerResponseQuiz> getAll() {
