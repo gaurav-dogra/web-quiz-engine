@@ -16,6 +16,7 @@ public class QuizController {
     @PostMapping("/api/quizzes")
     public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) {
         System.out.println("QuizController.createQuiz");
+        System.out.println(Arrays.toString(quiz.getAnswer()));
         return quizService.save(quiz);
     }
 
@@ -38,10 +39,9 @@ public class QuizController {
     @PostMapping("/api/quizzes/{id}/solve")
     public Reply solve(@PathVariable long id, @RequestBody AnswerParameter answer) throws NotFoundException {
         System.out.println("QuizController.solve");
-        System.out.println("id = " + id);
-        System.out.println("answer = " + Arrays.toString(answer.getAnswer()));
+        int[] answerParameter = answer.getAnswer() == null ? new int[]{} : answer.getAnswer();
         if (quizService.quizExist(id)) {
-            return quizService.solve(id, answer.getAnswer());
+            return quizService.solve(id, answerParameter);
         } else {
             throw new NotFoundException(id + " Quiz does not exist");
         }
