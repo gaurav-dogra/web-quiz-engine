@@ -4,6 +4,8 @@ import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -12,7 +14,7 @@ public class QuizController {
     private final QuizService quizService = new QuizService();
 
     @PostMapping("/api/quizzes")
-    public ServerResponseQuiz createQuiz(@RequestBody Quiz quiz) {
+    public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) {
         System.out.println("QuizController.createQuiz");
         return quizService.save(quiz);
     }
@@ -34,10 +36,10 @@ public class QuizController {
     }
 
     @PostMapping("/api/quizzes/{id}/solve")
-    public Reply solve(@PathVariable long id, @RequestParam int answer) throws NotFoundException {
+    public Reply solve(@PathVariable long id, @RequestParam int[] answer) throws NotFoundException {
         System.out.println("QuizController.solve");
         System.out.println("id = " + id);
-        System.out.println("answer = " + answer);
+        System.out.println("answer = " + Arrays.toString(answer));
         if (quizService.quizExist(id)) {
             return quizService.solve(id, answer);
         } else {
