@@ -3,10 +3,8 @@ package engine;
 import engine.model.Quiz;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizService {
@@ -37,11 +35,18 @@ public class QuizService {
         return quiz != null;
     }
 
-    public Reply solve(long id, int answer) {
+    public Reply solve(long id, int[] answer) {
         System.out.println("QuizService.solve");
         Quiz quiz = quizzes.get(id);
-        int answerDatabase = quiz.getAnswer();
-        if (answerDatabase == answer) {
+        List<Integer> answerDatabaseList = Arrays.stream(quiz.getAnswer())
+                .boxed()
+                .collect(Collectors.toList());
+
+        List<Integer> answerParameter = Arrays.stream(answer)
+                .boxed()
+                .collect(Collectors.toList());
+
+        if (answerDatabaseList.equals(answerParameter)) {
             return Reply.CORRECT_ANSWER;
         } else {
             return Reply.INCORRECT_ANSWER;
