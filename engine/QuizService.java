@@ -36,5 +36,16 @@ public class QuizService {
         Quiz quiz = quizzes.get(id);
         return quiz != null;
     }
+
+    public Reply solve(long id, int answer) {
+        System.out.println("QuizService.solve");
+        Quiz quiz = quizzes.get(id);
+        int answerDatabase = quiz.getAnswer();
+        if (answerDatabase == answer) {
+            return Reply.CORRECT_ANSWER;
+        } else {
+            return Reply.INCORRECT_ANSWER;
+        }
+    }
 }
 
