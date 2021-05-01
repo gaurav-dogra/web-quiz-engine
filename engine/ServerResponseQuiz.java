@@ -2,6 +2,7 @@ package engine;
 
 import engine.model.Quiz;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ServerResponseQuiz {
@@ -52,5 +53,15 @@ public class ServerResponseQuiz {
 
     public void setOptions(String[] options) {
         this.options = options;
+    }
+
+    @Override
+    public String toString() {
+        return "ServerResponseQuiz{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", options=" + Arrays.toString(options) +
+                '}';
     }
 }
