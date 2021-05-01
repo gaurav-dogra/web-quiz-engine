@@ -1,6 +1,5 @@
 package engine;
 
-import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +20,11 @@ public class QuizService {
     }
 
     public ServerResponseQuiz getQuizById(long id) {
-        Quiz quiz = quizzes.get(id);
-        if (quiz == null) {
-            return null;
+        System.out.println("QuizService.getQuizById");
+        if (quizExist(id)) {
+            return ServerResponseQuiz.valueOf(quizzes.get(id));
         }
-        return ServerResponseQuiz.valueOf(quiz);
+        return null;
     }
 
     public List<ServerResponseQuiz> getAll() {
@@ -34,6 +33,11 @@ public class QuizService {
             result.add(ServerResponseQuiz.valueOf(quiz));
         }
         return result;
+    }
+
+    public boolean quizExist(long id) {
+        Quiz quiz = quizzes.get(id);
+        return quiz != null;
     }
 }
 
