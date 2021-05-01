@@ -18,7 +18,7 @@ public class ServerResponseQuiz {
         ServerResponseQuiz serverResponseQuiz = new ServerResponseQuiz();
         serverResponseQuiz.id = quiz.getId();
         serverResponseQuiz.title = quiz.getTitle();
-        serverResponseQuiz.text = quiz.getTitle();
+        serverResponseQuiz.text = quiz.getText();
         serverResponseQuiz.options = quiz.getOptions();
         return serverResponseQuiz;
     }
