@@ -2,13 +2,21 @@ package engine.model;
 
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Validated
+@Entity
 public class Quiz {
+    @Id
+    @GeneratedValue
     private long id;
     @NotBlank
     private String title;
@@ -16,8 +24,10 @@ public class Quiz {
     private String text;
     @Size(min = 2)
     @NotNull
-    private String[] options;
-    private int[] answer;
+    @ElementCollection
+    private List<String> options;
+    @ElementCollection
+    private List<Integer> answer;
 
     public Quiz() {
     }
@@ -30,14 +40,14 @@ public class Quiz {
         this.id = id;
     }
 
-    public int[] getAnswer() {
+    public List getAnswer() {
         if (answer == null) {
-            return new int[]{};
+            return Collections.EMPTY_LIST;
         }
         return answer;
     }
 
-    public void setAnswer(int[] answer) {
+    public void setAnswer(List<Integer> answer) {
         this.answer = answer;
     }
 
@@ -57,11 +67,11 @@ public class Quiz {
         this.text = text;
     }
 
-    public String[] getOptions() {
+    public List<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String[] options) {
+    public void setOptions(List<String> options) {
         this.options = options;
     }
 
@@ -71,7 +81,7 @@ public class Quiz {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
-                ", options=" + Arrays.toString(options) +
+                ", options=" + options +
                 ", answer=" + answer +
                 '}';
     }
