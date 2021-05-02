@@ -1,7 +1,9 @@
 package engine;
 
+import engine.exceptions.BadRequestException;
 import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
+import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +14,12 @@ import java.util.List;
 public class QuizController {
 
     private final QuizService quizService;
+    private final UserService userService;
 
     @Autowired
-    public QuizController(QuizService quizService) {
+    public QuizController(QuizService quizService, UserService userService) {
         this.quizService = quizService;
+        this.userService = userService;
     }
 
     @PostMapping("/api/quizzes")
@@ -49,6 +53,18 @@ public class QuizController {
             return quizService.solve(id, answerParameter);
         } else {
             throw new NotFoundException(id + " Quiz does not exist");
+        }
+    }
+
+    @PostMapping("/api/register")
+    public void registerNewUser(@Valid @RequestBody User user) throws BadRequestException {
+        System.out.println("QuizController.registerNewUser");
+        System.out.println(user);
+        String email = user.getEmail();
+        if (userService.userExists(email)) {
+            throw new BadRequestException(email + " already exist.");
+        } else {
+            userService.saveNewUser(user);
         }
     }
 }
