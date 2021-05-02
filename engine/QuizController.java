@@ -2,21 +2,26 @@ package engine;
 
 import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 public class QuizController {
 
-    private final QuizService quizService = new QuizService();
+    private final QuizService quizService;
+
+    @Autowired
+    public QuizController(QuizService quizService) {
+        this.quizService = quizService;
+    }
 
     @PostMapping("/api/quizzes")
     public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) {
         System.out.println("QuizController.createQuiz");
-        System.out.println(Arrays.toString(quiz.getAnswer()));
+        System.out.println(quiz.getAnswer());
         return quizService.save(quiz);
     }
 
