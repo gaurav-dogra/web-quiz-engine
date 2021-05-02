@@ -1,14 +1,21 @@
 package engine.model;
 
+import org.springframework.validation.annotation.Validated;
+
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
+@Validated
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Pattern(regexp = ".+@.+\\..+")
     private String email;
+    @Size(min = 5)
     private String password;
     @OneToMany(mappedBy = "user")
     private List<Quiz> quizzes;
