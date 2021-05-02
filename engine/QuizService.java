@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Service
 public class QuizService {
     private final Map<Long, Quiz> quizzes = new HashMap<>();
-    private QuizRepository quizRepository;
+    private final QuizRepository quizRepository;
 
     @Autowired
     public QuizService(QuizRepository quizRepository) {
@@ -24,20 +24,20 @@ public class QuizService {
     }
 
     public ServerResponseQuiz getQuizById(long id) {
-        return ServerResponseQuiz.valueOf(quizzes.get(id));
+        Quiz quizDb = quizRepository.findById(id).orElseThrow();
+        return ServerResponseQuiz.valueOf(quizDb);
     }
 
     public List<ServerResponseQuiz> getAll() {
-        List<ServerResponseQuiz> result = new ArrayList<>();
-        for (Quiz quiz : quizzes.values()) {
-            result.add(ServerResponseQuiz.valueOf(quiz));
-        }
-        return result;
+        return quizRepository.findAll()
+                .stream()
+                .map(ServerResponseQuiz::valueOf)
+                .collect(Collectors.toList());
     }
 
     public boolean quizExist(long id) {
-        Quiz quiz = quizzes.get(id);
-        return quiz != null;
+        return quizRepository.findById(id)
+                .isPresent();
     }
 
 //    public Reply solve(long id, int[] parameterAnswer) {
