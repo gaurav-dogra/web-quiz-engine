@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 public class Quiz {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotBlank
     private String title;
