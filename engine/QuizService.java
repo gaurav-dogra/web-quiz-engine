@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class QuizService {
-    private final Map<Long, Quiz> quizzes = new HashMap<>();
     private final QuizRepository quizRepository;
 
     @Autowired
