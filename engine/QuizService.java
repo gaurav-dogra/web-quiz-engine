@@ -40,23 +40,21 @@ public class QuizService {
                 .isPresent();
     }
 
-//    public Reply solve(long id, int[] parameterAnswer) {
-//        Quiz quiz = quizzes.get(id);
-//        List<Integer> databaseAnswer = quiz.getAnswer();
-//
-//        Set<Integer> databaseAnswerSet = Arrays.stream(databaseAnswer)
-//                    .boxed()
-//                    .collect(Collectors.toSet());
-//
-//        Set<Integer> parameterAnswerSet = Arrays.stream(parameterAnswer)
-//                    .boxed()
-//                    .collect(Collectors.toSet());
-//
-//        if (databaseAnswerSet.equals(parameterAnswerSet)) {
-//            return Reply.CORRECT_ANSWER;
-//        } else {
-//            return Reply.INCORRECT_ANSWER;
-//        }
-//    }
+    public Reply solve(long id, int[] parameterAnswer) {
+        Quiz quiz = quizRepository.findById(id).orElseThrow();
+        List<Integer> databaseAnswer = quiz.getAnswer();
+
+        Set<Integer> databaseAnswerSet = new HashSet<>(databaseAnswer);
+
+        Set<Integer> parameterAnswerSet = Arrays.stream(parameterAnswer)
+                    .boxed()
+                    .collect(Collectors.toSet());
+
+        if (databaseAnswerSet.equals(parameterAnswerSet)) {
+            return Reply.CORRECT_ANSWER;
+        } else {
+            return Reply.INCORRECT_ANSWER;
+        }
+    }
 }
 
