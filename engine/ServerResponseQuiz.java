@@ -9,7 +9,7 @@ public class ServerResponseQuiz {
     private long id;
     private String title;
     private String text;
-    private String[] options;
+    private List<String> options;
 
     public ServerResponseQuiz() {
     }
@@ -47,11 +47,11 @@ public class ServerResponseQuiz {
         this.text = text;
     }
 
-    public String[] getOptions() {
+    public List<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String[] options) {
+    public void setOptions(List<String> options) {
         this.options = options;
     }
 
@@ -61,7 +61,7 @@ public class ServerResponseQuiz {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
-                ", options=" + Arrays.toString(options) +
+                ", options=" + options +
                 '}';
     }
 }
