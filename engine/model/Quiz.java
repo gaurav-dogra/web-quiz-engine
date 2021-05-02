@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,9 +41,9 @@ public class Quiz {
         this.id = id;
     }
 
-    public List getAnswer() {
+    public List<Integer> getAnswer() {
         if (answer == null) {
-            return Collections.EMPTY_LIST;
+            return new ArrayList<Integer>();
         }
         return answer;
     }
