@@ -60,11 +60,7 @@ public class QuizController {
     public void registerNewUser(@Valid @RequestBody User user) throws BadRequestException {
         System.out.println("QuizController.registerNewUser");
         System.out.println(user);
-        String email = user.getEmail();
-        if (userService.userExists(email)) {
-            throw new BadRequestException(email + " already exist.");
-        } else {
-            userService.saveNewUser(user);
-        }
+        // check: will it throw a 400 BAD_REQUEST on duplicate email
+        userService.saveNewUser(user);
     }
 }
