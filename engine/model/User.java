@@ -5,6 +5,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Validated
@@ -14,8 +16,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Pattern(regexp = ".+@.+\\..+")
+    @Column(nullable = false, unique = true)
     private String email;
     @Size(min = 5)
+    @Column(nullable = false)
     private String password;
     @OneToMany(mappedBy = "user")
     private List<Quiz> quizzes;
