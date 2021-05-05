@@ -65,6 +65,7 @@ public class User {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", quizzes=" + quizzes +
                 '}';
     }
 }
