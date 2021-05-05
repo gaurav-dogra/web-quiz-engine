@@ -5,6 +5,8 @@ import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,10 +25,17 @@ public class QuizController {
     }
 
     @PostMapping("/api/quizzes")
-    public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) {
+    public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) throws NotFoundException {
         System.out.println("QuizController.createQuiz");
-        System.out.println(quiz.getAnswer());
+        quiz.setUser(getCurrentUser());
         return quizService.save(quiz);
+    }
+
+    private User getCurrentUser() throws NotFoundException {
+        System.out.println("QuizController.getCurrentUser");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        return userService.getUserByEmail(currentPrincipalName);
     }
 
     @GetMapping("/api/quizzes/{id}")
@@ -59,8 +68,9 @@ public class QuizController {
     @PostMapping("/api/register")
     public void registerNewUser(@Valid @RequestBody User user) throws BadRequestException {
         System.out.println("QuizController.registerNewUser");
-        System.out.println(user);
-        // check: will it throw a 400 BAD_REQUEST on duplicate email
-        userService.saveNewUser(user);
+        if (userService.exist(user)) {
+            throw new BadRequestException(user.getEmail() + " already exist");
+        }
+        userService.save(user);
     }
 }
