@@ -1,6 +1,5 @@
 package engine;
 
-import engine.exceptions.NotFoundException;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +31,8 @@ public class UserService {
         return userDb.isPresent();
     }
 
-    public User getUserByEmail(String email) throws NotFoundException {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("Invalid email address"));
+                .get();
     }
 }

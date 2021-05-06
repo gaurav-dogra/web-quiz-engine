@@ -1,6 +1,7 @@
 package engine;
 
 import engine.model.Quiz;
+import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,15 @@ public class QuizService {
         } else {
             return Reply.INCORRECT_ANSWER;
         }
+    }
+
+    public User getOwnerUser(long id) {
+            Quiz quiz = quizRepository.findById(id).orElseThrow();
+            return quiz.getUser();
+    }
+
+    public void deleteQuizById(long id) {
+        quizRepository.deleteById(id);
     }
 }
 

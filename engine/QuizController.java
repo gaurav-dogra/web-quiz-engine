@@ -5,6 +5,8 @@ import engine.exceptions.NotFoundException;
 import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +27,13 @@ public class QuizController {
     }
 
     @PostMapping("/api/quizzes")
-    public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) throws NotFoundException {
+    public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) {
         System.out.println("QuizController.createQuiz");
         quiz.setUser(getCurrentUser());
         return quizService.save(quiz);
     }
 
-    private User getCurrentUser() throws NotFoundException {
+    private User getCurrentUser() {
         System.out.println("QuizController.getCurrentUser");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
@@ -72,5 +74,22 @@ public class QuizController {
             throw new BadRequestException(user.getEmail() + " already exist");
         }
         userService.save(user);
+    }
+
+    @DeleteMapping("/api/quizzes/{id}")
+    public ResponseEntity deleteQuiz(@PathVariable long id) {
+        System.out.println("QuizController.deleteQuiz");
+        if (quizService.quizExist(id)) {
+            long ownerUserId = quizService.getOwnerUser(id).getId();
+            long contextUserId = getCurrentUser().getId();
+            if (ownerUserId == contextUserId) {
+                quizService.deleteQuizById(id);
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }
