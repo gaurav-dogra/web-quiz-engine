@@ -24,15 +24,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .antMatchers("/api/quizzes").permitAll()
-                .antMatchers("/api/register", "/h2-console/**", "/actuator/shutdown")
-                .permitAll()
+                .csrf().disable()
+                .httpBasic()
                 .and()
-                .httpBasic();
-
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
+                .authorizeRequests()
+                .antMatchers("api/register/**").permitAll()
+                .antMatchers("/users").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/actuator/shutdown/**").permitAll()
+                .antMatchers("/api/quizzes/**").authenticated()
+                .and()
+                .headers().frameOptions().disable();
     }
 
     @Bean
