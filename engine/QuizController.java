@@ -51,9 +51,13 @@ public class QuizController {
     }
 
     @GetMapping("/api/quizzes")
-    public List<ServerResponseQuiz> getAll() {
+    public List<ServerResponseQuiz> getAll(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
         System.out.println("QuizController.getAll");
-        return quizService.getAll();
+        List<Quiz> list = quizService.getAll(pageNo, pageSize, sortBy);
+        return list;
     }
 
     @PostMapping("/api/quizzes/{id}/solve")
