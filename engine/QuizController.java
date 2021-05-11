@@ -56,8 +56,7 @@ public class QuizController {
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
         System.out.println("QuizController.getAll");
-        List<Quiz> list = quizService.getAll(pageNo, pageSize, sortBy);
-        return list;
+        return quizService.getAll(pageNo, pageSize, sortBy);
     }
 
     @PostMapping("/api/quizzes/{id}/solve")
