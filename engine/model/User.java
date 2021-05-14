@@ -23,6 +23,8 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "user")
     private List<Quiz> quizzes;
+    @OneToMany(mappedBy = "user")
+    private List<Content> content;
 
     public User() {
     }
