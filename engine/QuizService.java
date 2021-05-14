@@ -30,7 +30,6 @@ public class QuizService {
     }
 
     public Page<Quiz> getAll(Integer pageNo, Integer pageSize, String sortBy) {
-        System.out.println("QuizService.getAll");
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         return quizRepository.findAll(paging);
     }
@@ -41,10 +40,8 @@ public class QuizService {
     }
 
     public Reply solve(long id, int[] parameterAnswer) {
-        System.out.println("id = " + id + ", parameterAnswer = " + Arrays.toString(parameterAnswer));
         Quiz quiz = quizRepository.findById(id).orElseThrow();
         List<Integer> databaseAnswer = quiz.getAnswer();
-        System.out.println("databaseAnswer = " + databaseAnswer);
         Set<Integer> databaseAnswerSet = new HashSet<>(databaseAnswer);
 
         Set<Integer> parameterAnswerSet = Arrays.stream(parameterAnswer)
