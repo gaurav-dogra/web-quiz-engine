@@ -7,6 +7,7 @@ import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,7 @@ public class QuizController {
     }
 
     @PostMapping("/api/quizzes")
-    public ServerResponseQuiz createQuiz(@Valid @RequestBody Quiz quiz) {
+    public Quiz createQuiz(@Valid @RequestBody Quiz quiz) {
         System.out.println("QuizController.createQuiz");
         quiz.setUser(getCurrentUser());
         return quizService.save(quiz);
@@ -46,7 +47,7 @@ public class QuizController {
     }
 
     @GetMapping("/api/quizzes/{id}")
-    public ServerResponseQuiz getQuizById(@PathVariable long id) throws NotFoundException {
+    public Quiz getQuizById(@PathVariable long id) throws NotFoundException {
         System.out.println("QuizController.getQuizById");
         if (quizService.quizExist(id)) {
             return quizService.getQuizById(id);
@@ -56,7 +57,7 @@ public class QuizController {
     }
 
     @GetMapping("/api/quizzes")
-    public List<ServerResponseQuiz> getAll(
+    public Page<Quiz> getAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
