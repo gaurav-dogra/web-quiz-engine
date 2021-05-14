@@ -1,5 +1,7 @@
 package engine.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -24,9 +26,11 @@ public class Quiz {
     @ElementCollection
     private List<String> options;
     @ElementCollection
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Integer> answer;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     public Quiz() {
@@ -40,6 +44,7 @@ public class Quiz {
         this.id = id;
     }
 
+    @JsonIgnore
     public List<Integer> getAnswer() {
         if (answer == null) {
             return new ArrayList<Integer>();
