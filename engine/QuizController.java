@@ -2,9 +2,11 @@ package engine;
 
 import engine.exceptions.BadRequestException;
 import engine.exceptions.NotFoundException;
+import engine.model.Content;
 import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,11 +22,13 @@ public class QuizController {
 
     private final QuizService quizService;
     private final UserService userService;
+    private final ContentService contentService;
 
     @Autowired
-    public QuizController(QuizService quizService, UserService userService) {
+    public QuizController(QuizService quizService, UserService userService, ContentService contentService) {
         this.quizService = quizService;
         this.userService = userService;
+        this.contentService = contentService;
     }
 
     @PostMapping("/api/quizzes")
@@ -64,7 +69,11 @@ public class QuizController {
         System.out.println("QuizController.solve");
         int[] answerParameter = answer.getAnswer() == null ? new int[]{} : answer.getAnswer();
         if (quizService.quizExist(id)) {
-            return quizService.solve(id, answerParameter);
+            Reply reply = quizService.solve(id, answerParameter);
+            if (reply.isSuccess()) {
+                contentService.save(id, LocalDateTime.now(), getCurrentUser());
+            }
+            return reply;
         } else {
             throw new NotFoundException(id + " Quiz does not exist");
         }
@@ -80,19 +89,25 @@ public class QuizController {
     }
 
     @DeleteMapping("/api/quizzes/{id}")
-    public ResponseEntity deleteQuiz(@PathVariable long id) {
+    public ResponseEntity<HttpStatus> deleteQuiz(@PathVariable long id) {
         System.out.println("QuizController.deleteQuiz");
         if (quizService.quizExist(id)) {
             long ownerUserId = quizService.getOwnerUser(id).getId();
             long contextUserId = getCurrentUser().getId();
             if (ownerUserId == contextUserId) {
                 quizService.deleteQuizById(id);
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
         } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/api/quizzes/completed")
+    public List<Content> completions() {
+        System.out.println("QuizController.completions");
+        return contentService.findAll(getCurrentUser());
     }
 }
