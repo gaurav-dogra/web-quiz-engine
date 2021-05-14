@@ -21,31 +21,18 @@ public class QuizService {
         this.quizRepository = quizRepository;
     }
 
-    public ServerResponseQuiz save(Quiz quiz) {
-        Quiz quizDb = quizRepository.save(quiz);
-        System.out.println("quizDb = " + quizDb);
-        return ServerResponseQuiz.valueOf(quizDb);
+    public Quiz save(Quiz quiz) {
+        return quizRepository.save(quiz);
     }
 
-    public ServerResponseQuiz getQuizById(long id) {
-        Quiz quizDb = quizRepository.findById(id).orElseThrow();
-        return ServerResponseQuiz.valueOf(quizDb);
+    public Quiz getQuizById(long id) {
+        return quizRepository.findById(id).orElseThrow();
     }
 
-    public List<ServerResponseQuiz> getAll(Integer pageNo, Integer pageSize, String sortBy) {
+    public Page<Quiz> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         System.out.println("QuizService.getAll");
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<Quiz> pageResult = quizRepository.findAll(paging);
-        if (pageResult.hasContent()) {
-            List<ServerResponseQuiz> result = pageResult.getContent()
-                    .stream()
-                    .map(ServerResponseQuiz::valueOf)
-                    .collect(Collectors.toList());
-            System.out.println(result);
-            return result;
-        } else {
-            return new ArrayList<>();
-        }
+        return quizRepository.findAll(paging);
     }
 
     public boolean quizExist(long id) {
@@ -54,8 +41,10 @@ public class QuizService {
     }
 
     public Reply solve(long id, int[] parameterAnswer) {
+        System.out.println("id = " + id + ", parameterAnswer = " + Arrays.toString(parameterAnswer));
         Quiz quiz = quizRepository.findById(id).orElseThrow();
         List<Integer> databaseAnswer = quiz.getAnswer();
+        System.out.println("databaseAnswer = " + databaseAnswer);
         Set<Integer> databaseAnswerSet = new HashSet<>(databaseAnswer);
 
         Set<Integer> parameterAnswerSet = Arrays.stream(parameterAnswer)
@@ -63,9 +52,10 @@ public class QuizService {
                 .collect(Collectors.toSet());
 
         if (databaseAnswerSet.equals(parameterAnswerSet)) {
-
+            System.out.println("Correct");
             return Reply.CORRECT_ANSWER;
         } else {
+            System.out.println("Incorrect");
             return Reply.INCORRECT_ANSWER;
         }
     }
