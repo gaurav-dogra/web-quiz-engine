@@ -33,15 +33,18 @@ public class QuizService {
     }
 
     public List<ServerResponseQuiz> getAll(Integer pageNo, Integer pageSize, String sortBy) {
+        System.out.println("QuizService.getAll");
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<Quiz> pageResult = quizRepository.findAll(paging);
         if (pageResult.hasContent()) {
-            return pageResult.getContent()
+            List<ServerResponseQuiz> result = pageResult.getContent()
                     .stream()
                     .map(ServerResponseQuiz::valueOf)
                     .collect(Collectors.toList());
+            System.out.println(result);
+            return result;
         } else {
-            return new ArrayList<ServerResponseQuiz>();
+            return new ArrayList<>();
         }
     }
 
@@ -53,14 +56,14 @@ public class QuizService {
     public Reply solve(long id, int[] parameterAnswer) {
         Quiz quiz = quizRepository.findById(id).orElseThrow();
         List<Integer> databaseAnswer = quiz.getAnswer();
-
         Set<Integer> databaseAnswerSet = new HashSet<>(databaseAnswer);
 
         Set<Integer> parameterAnswerSet = Arrays.stream(parameterAnswer)
-                    .boxed()
-                    .collect(Collectors.toSet());
+                .boxed()
+                .collect(Collectors.toSet());
 
         if (databaseAnswerSet.equals(parameterAnswerSet)) {
+
             return Reply.CORRECT_ANSWER;
         } else {
             return Reply.INCORRECT_ANSWER;
@@ -68,8 +71,8 @@ public class QuizService {
     }
 
     public User getOwnerUser(long id) {
-            Quiz quiz = quizRepository.findById(id).orElseThrow();
-            return quiz.getUser();
+        Quiz quiz = quizRepository.findById(id).orElseThrow();
+        return quiz.getUser();
     }
 
     public void deleteQuizById(long id) {
