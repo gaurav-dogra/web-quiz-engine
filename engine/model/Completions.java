@@ -7,23 +7,25 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class Content implements Comparable<Content> {
+public class Completions implements Comparable<Completions> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long completionId;
-    @ManyToOne
-    @JoinColumn(name = "quiz")
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Quiz quiz;
+
     private LocalDateTime completedAt;
-    @ManyToOne
-    @JoinColumn(name = "user")
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
     @Override
-    public int compareTo(Content o) {
+    public int compareTo(Completions o) {
         if (this.completedAt.isBefore(o.completedAt)) {
             return 1;
         } else if (this.completedAt.isAfter(o.completedAt)) {
@@ -33,13 +35,13 @@ public class Content implements Comparable<Content> {
         }
     }
 
-    public Content(Quiz quiz, LocalDateTime completedAt, User user) {
+    public Completions(Quiz quiz, LocalDateTime completedAt, User user) {
         this.quiz = quiz;
         this.completedAt = completedAt;
         this.user = user;
     }
 
-    public Content() {
+    public Completions() {
     }
 
     public LocalDateTime getCompletedAt() {
