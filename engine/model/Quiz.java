@@ -14,24 +14,36 @@ import java.util.List;
 @Validated
 @Entity
 public class Quiz {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NotBlank
     private String title;
+
     @NotBlank
     private String text;
+
     @Size(min = 2)
     @NotNull
     @ElementCollection
     private List<String> options;
+
     @ElementCollection
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Integer> answer;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Quiz> quizzes;
 
     public Quiz() {
     }
