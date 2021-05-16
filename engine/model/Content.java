@@ -1,6 +1,7 @@
 package engine.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,12 +10,16 @@ import java.time.LocalDateTime;
 public class Content implements Comparable<Content> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long completionId;
-    private Long questionId;
+    @ManyToOne
+    @JoinColumn(name = "quiz")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Quiz quiz;
     private LocalDateTime completedAt;
     @ManyToOne
-    @JoinColumn(name = "solvedByUser")
+    @JoinColumn(name = "user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
     @Override
@@ -28,8 +33,8 @@ public class Content implements Comparable<Content> {
         }
     }
 
-    public Content(Long id, LocalDateTime completedAt, User user) {
-        this.questionId = id;
+    public Content(Quiz quiz, LocalDateTime completedAt, User user) {
+        this.quiz = quiz;
         this.completedAt = completedAt;
         this.user = user;
     }
@@ -45,15 +50,26 @@ public class Content implements Comparable<Content> {
         this.completedAt = completedAt;
     }
 
-    public void setQuestionId(Long id) {
-        this.questionId = id;
-    }
 
-    public Long getQuestionId() {
-        return questionId;
-    }
-
+    @JsonIgnore
     public User getUser() {
         return user;
+    }
+
+    @JsonIgnore
+    public Long getCompletionId() {
+        return completionId;
+    }
+
+    public void setCompletionId(Long completionId) {
+        this.completionId = completionId;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 }
