@@ -1,6 +1,6 @@
 package engine;
 
-import engine.model.Content;
+import engine.model.Completions;
 import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ public class ContentService {
     }
 
     public void save(Quiz quiz, LocalDateTime localDateTime, User user) {
-        contentRepository.save(new Content(quiz, localDateTime, user));
+        contentRepository.save(new Completions(quiz, localDateTime, user));
     }
 
-    public Page<Content> getCompletions(Integer pageNo, Integer pageSize, String sortBy) {
+    public Page<Completions> getCompletions(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         return contentRepository.findAll(paging);
     }
