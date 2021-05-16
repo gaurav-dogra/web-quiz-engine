@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 public class QuizController {
@@ -71,7 +70,8 @@ public class QuizController {
         if (quizService.quizExist(id)) {
             Reply reply = quizService.solve(id, answerParameter);
             if (reply.isSuccess()) {
-                contentService.save(id, LocalDateTime.now(), getCurrentUser());
+                Quiz quiz = getQuizById(id);
+                contentService.save(quiz, LocalDateTime.now(), getCurrentUser());
             }
             return reply;
         } else {
@@ -82,6 +82,7 @@ public class QuizController {
     @PostMapping("/api/register")
     public void registerNewUser(@Valid @RequestBody User user) throws BadRequestException {
         System.out.println("QuizController.registerNewUser");
+        System.out.println("user = " + user);
         if (userService.exist(user)) {
             throw new BadRequestException(user.getEmail() + " already exist");
         }
@@ -106,8 +107,11 @@ public class QuizController {
     }
 
     @GetMapping("/api/quizzes/completed")
-    public List<Content> completions() {
+    public Page<Content> completions(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
         System.out.println("QuizController.completions");
-        return contentService.findAll(getCurrentUser());
+        return contentService.getCompletions(pageNo, pageSize, sortBy);
     }
 }
