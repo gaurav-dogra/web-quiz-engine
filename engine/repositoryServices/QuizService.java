@@ -1,5 +1,7 @@
-package engine;
+package engine.repositoryServices;
 
+import engine.QuizRepository;
+import engine.Reply;
 import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;

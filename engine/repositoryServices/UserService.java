@@ -1,5 +1,6 @@
-package engine;
+package engine.repositoryServices;
 
+import engine.UserRepository;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

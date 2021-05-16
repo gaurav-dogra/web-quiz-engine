@@ -1,5 +1,7 @@
-package engine;
+package engine.repositoryServices;
 
+import engine.MyUserPrincipal;
+import engine.UserRepository;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
