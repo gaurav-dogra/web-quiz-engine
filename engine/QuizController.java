@@ -5,7 +5,7 @@ import engine.exceptions.NotFoundException;
 import engine.model.Completions;
 import engine.model.Quiz;
 import engine.model.User;
-import engine.repositoryServices.ContentService;
+import engine.repositoryServices.CompletionsService;
 import engine.repositoryServices.QuizService;
 import engine.repositoryServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ public class QuizController {
 
     private final QuizService quizService;
     private final UserService userService;
-    private final ContentService contentService;
+    private final CompletionsService completionsService;
 
     @Autowired
-    public QuizController(QuizService quizService, UserService userService, ContentService contentService) {
+    public QuizController(QuizService quizService, UserService userService, CompletionsService completionsService) {
         this.quizService = quizService;
         this.userService = userService;
-        this.contentService = contentService;
+        this.completionsService = completionsService;
     }
 
     @PostMapping("/api/register")
@@ -83,7 +83,7 @@ public class QuizController {
             Reply reply = quizService.solve(id, answerParameter);
             if (reply.isSuccess()) {
                 Quiz quiz = getQuizById(id);
-                contentService.save(quiz, LocalDateTime.now(), getCurrentUser());
+                completionsService.save(quiz, LocalDateTime.now(), getCurrentUser());
             }
             return reply;
         } else {
@@ -114,6 +114,6 @@ public class QuizController {
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
         System.out.println("QuizController.completions");
-        return contentService.getCompletions(pageNo, pageSize, sortBy);
+        return completionsService.getCompletions(pageNo, pageSize, sortBy);
     }
 }

@@ -1,6 +1,6 @@
 package engine.repositoryServices;
 
-import engine.ContentRepository;
+import engine.CompletionsRepository;
 import engine.model.Completions;
 import engine.model.Quiz;
 import engine.model.User;
@@ -14,21 +14,21 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-public class ContentService {
+public class CompletionsService {
 
-    private final ContentRepository contentRepository;
+    private final CompletionsRepository completionsRepository;
 
     @Autowired
-    public ContentService(ContentRepository contentRepository) {
-        this.contentRepository = contentRepository;
+    public CompletionsService(CompletionsRepository completionsRepository) {
+        this.completionsRepository = completionsRepository;
     }
 
     public void save(Quiz quiz, LocalDateTime localDateTime, User user) {
-        contentRepository.save(new Completions(quiz, localDateTime, user));
+        completionsRepository.save(new Completions(quiz, localDateTime, user));
     }
 
     public Page<Completions> getCompletions(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        return contentRepository.findAll(paging);
+        return completionsRepository.findAll(paging);
     }
 }
