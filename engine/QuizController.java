@@ -2,7 +2,7 @@ package engine;
 
 import engine.exceptions.BadRequestException;
 import engine.exceptions.NotFoundException;
-import engine.model.Content;
+import engine.model.Completions;
 import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +30,15 @@ public class QuizController {
         this.contentService = contentService;
     }
 
+    @PostMapping("/api/register")
+    public void registerNewUser(@Valid @RequestBody User user) throws BadRequestException {
+        System.out.println("QuizController.registerNewUser");
+        if (userService.exist(user)) {
+            throw new BadRequestException(user.getEmail() + " already exist");
+        }
+        userService.save(user);
+    }
+
     @PostMapping("/api/quizzes")
     public Quiz createQuiz(@Valid @RequestBody Quiz quiz) {
         System.out.println("QuizController.createQuiz");
@@ -44,6 +53,15 @@ public class QuizController {
         return userService.getUserByEmail(currentPrincipalName);
     }
 
+    @GetMapping("/api/quizzes")
+    public Page<Quiz> getAll(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        System.out.println("QuizController.getAll");
+        return quizService.getAll(pageNo, pageSize, sortBy);
+    }
+
     @GetMapping("/api/quizzes/{id}")
     public Quiz getQuizById(@PathVariable long id) throws NotFoundException {
         System.out.println("QuizController.getQuizById");
@@ -52,15 +70,6 @@ public class QuizController {
         } else {
             throw new NotFoundException(id + " Quiz does not exist");
         }
-    }
-
-    @GetMapping("/api/quizzes")
-    public Page<Quiz> getAll(
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy) {
-        System.out.println("QuizController.getAll");
-        return quizService.getAll(pageNo, pageSize, sortBy);
     }
 
     @PostMapping("/api/quizzes/{id}/solve")
@@ -77,16 +86,6 @@ public class QuizController {
         } else {
             throw new NotFoundException(id + " Quiz does not exist");
         }
-    }
-
-    @PostMapping("/api/register")
-    public void registerNewUser(@Valid @RequestBody User user) throws BadRequestException {
-        System.out.println("QuizController.registerNewUser");
-        System.out.println("user = " + user);
-        if (userService.exist(user)) {
-            throw new BadRequestException(user.getEmail() + " already exist");
-        }
-        userService.save(user);
     }
 
     @DeleteMapping("/api/quizzes/{id}")
@@ -107,7 +106,7 @@ public class QuizController {
     }
 
     @GetMapping("/api/quizzes/completed")
-    public Page<Content> completions(
+    public Page<Completions> completions(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
