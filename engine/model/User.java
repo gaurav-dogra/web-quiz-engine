@@ -21,7 +21,7 @@ public class User {
     @Size(min = 5)
     @Column(nullable = false)
     private String password;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "quiz")
     private List<Quiz> quizzes;
     @OneToMany(mappedBy = "user")
     private List<Content> content;
@@ -69,5 +69,13 @@ public class User {
                 ", password='" + password + '\'' +
                 ", quizzes=" + quizzes +
                 '}';
+    }
+
+    public List<Content> getContent() {
+        return content;
+    }
+
+    public void setContent(List<Content> content) {
+        this.content = content;
     }
 }
