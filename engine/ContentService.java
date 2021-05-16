@@ -1,34 +1,33 @@
 package engine;
 
 import engine.model.Content;
+import engine.model.Quiz;
 import engine.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ContentService {
 
-    private ContentRepository contentRepository;
+    private final ContentRepository contentRepository;
 
     @Autowired
     public ContentService(ContentRepository contentRepository) {
         this.contentRepository = contentRepository;
     }
 
-    public void save(Long questionId, LocalDateTime localDateTime, User user) {
-        contentRepository.save(new Content(questionId, localDateTime, user));
+    public void save(Quiz quiz, LocalDateTime localDateTime, User user) {
+        contentRepository.save(new Content(quiz, localDateTime, user));
     }
 
-    public List<Content> findAll(User user) {
-        List<Content> allCompletions = contentRepository.findAll();
-        return allCompletions.stream()
-                .filter(content -> content.getUser().getId() == user.getId())
-                .sorted()
-                .collect(Collectors.toList());
+    public Page<Content> getCompletions(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return contentRepository.findAll(paging);
     }
 }
