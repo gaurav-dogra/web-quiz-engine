@@ -5,26 +5,30 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Validated
 @Entity
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Pattern(regexp = ".+@.+\\..+")
     @Column(nullable = false, unique = true)
     private String email;
+
     @Size(min = 5)
     @Column(nullable = false)
     private String password;
-    @OneToMany(mappedBy = "quiz")
-    private List<Quiz> quizzes;
-    @OneToMany(mappedBy = "user")
-    private List<Content> content;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Completions> completions;
 
     public User() {
     }
@@ -53,29 +57,20 @@ public class User {
         this.password = password;
     }
 
-    public List<Quiz> getQuizzes() {
-        return quizzes;
-    }
-
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", quizzes=" + quizzes +
                 '}';
     }
 
-    public List<Content> getContent() {
-        return content;
+    public List<Completions> getContent() {
+        return completions;
     }
 
-    public void setContent(List<Content> content) {
-        this.content = content;
+    public void setContent(List<Completions> completions) {
+        this.completions = completions;
     }
 }
